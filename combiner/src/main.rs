@@ -1,4 +1,4 @@
-// Lesson #51
+// Lesson #61
 #![allow(unused_variables, dead_code)]
 mod args;
 
@@ -20,6 +20,7 @@ fn main() -> Result<(), String> {
 
   let (image_1, image_2) = standardise_size(image_1, image_2);
   let output = FloatingImage::new(image_1.width(), image_1.height(), args.output);
+
   Ok(())
 }
 
@@ -66,52 +67,42 @@ fn get_smallest_dimensions(dim_1: (u32, u32), dim_2: (u32, u32)) -> (u32, u32) {
   return if pix_1 < pix_2 { dim_1 } else { dim_2 };
 }
 
+fn combine_images(image_1: DynamicImage, image_2: DynamicImage) -> Vec<u8> {
+  let vec_1 = image_1.to_rgba8().into_vec();
+  let vec_2 = image_2.to_rgba8().into_vec();
+  vec_2
+}
+
+fn alternate_pixels(vec_1: Vec<u8>, vec_2: Vec<u8>) -> Vec<u8> {
+  let combined_data = vec![0u8; vec_1.len()];
+
+  let i = 0;
+  while i < vec_1.len() {}
+
+  combined_data
+}
+
+fn set_rgba(vec: Vec<u8>, start: usize, end: usize) -> Vec<u8> {
+  let mut rgba = Vec::new();
+  for i in start..=end {
+
+    rgba.push(i as u8);
+  }
+  rgba
+}
+
 #[cfg(test)]
 mod tests {
   use super::*;
   #[test]
-  fn floating_image_struct_width() {
-    let float = FloatingImage::new(1u32, 2u32, "test".to_string());
-    assert_eq!(float.width, 1);
+  fn set_rgba_func_returns_start_to_end() {
+    let a = set_rgba(vec![0u8, 1u8, 2u8, 3u8, 4u8], 0usize, 3usize);
+    assert_eq!(a, vec![0, 1, 2, 3]);
   }
   #[test]
-  fn floating_image_struct_height() {
-    let float = FloatingImage::new(0u32, 10u32, "test".to_string());
-    assert_eq!(float.height, 10);
-  }
-  #[test]
-  fn floating_image_struct_name() {
-    let float = FloatingImage::new(0u32, 0u32, "output".to_string());
-    assert_eq!(float.name, String::from("output"));
-  }
-  #[test]
-  fn floating_image_struct_data() {
-    let float = FloatingImage::new(0u32, 0u32, "test".to_string());
-    assert_eq!(float.data.capacity(), 3_655_744);
-  }
-  #[test]
-  fn output_var_declared() {
-    if let Some((file_contents, _)) = return_file_in_src("main.rs").split_once("#[cfg(test)]") {
-      assert!(reg_with_con(r"let\s+output", file_contents));
-      assert!(reg_with_con(
-        r"FloatingImage::new\(\s*image_1\.width\(\)\s*,\s*image_1\.height\(\)\s*,\s*args\.output",
-        file_contents
-      ));
-    }
-  }
-
-  fn reg_with_con(regex: &str, file_contents: &str) -> bool {
-    use regex::Regex;
-
-    Regex::new(regex).unwrap().is_match(file_contents)
-  }
-  fn return_file_in_src(filename: &str) -> String {
-    use std::fs::read_to_string;
-
-    match read_to_string(String::from("combiner/src/") + filename) {
-      Ok(file_contents) => file_contents,
-      Err(_) => String::from("File does not exist"),
-    }
+  #[should_panic]
+  fn set_rgba_func_panics_on_invalid_index() {
+    let a = set_rgba(vec![10u8, 12u8, 32u8, 34u8, 54u8], 0usize, 5usize);
   }
 }
 
