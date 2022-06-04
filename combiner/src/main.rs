@@ -1,4 +1,4 @@
-// Lesson #49
+// Lesson #51
 #![allow(unused_variables, dead_code)]
 mod args;
 
@@ -19,7 +19,7 @@ fn main() -> Result<(), String> {
   }
 
   let (image_1, image_2) = standardise_size(image_1, image_2);
-
+  let output = FloatingImage::new(image_1.width(), image_1.height(), args.output);
   Ok(())
 }
 
@@ -31,9 +31,15 @@ struct FloatingImage {
 }
 
 impl FloatingImage {
-  fn new(width: u32, height: u32, name: String) {
+  fn new(width: u32, height: u32, name: String) -> Self {
     let buffer_capacity = 3_655_744;
     let buffer: Vec<u8> = Vec::with_capacity(buffer_capacity);
+    FloatingImage {
+      width,
+      height,
+      data: buffer,
+      name,
+    }
   }
 }
 
@@ -64,32 +70,31 @@ fn get_smallest_dimensions(dim_1: (u32, u32), dim_2: (u32, u32)) -> (u32, u32) {
 mod tests {
   use super::*;
   #[test]
-  fn floating_image_struct_impl_new() {
-    let _float = FloatingImage::new(1u32, 2u32, "test".to_string());
+  fn floating_image_struct_width() {
+    let float = FloatingImage::new(1u32, 2u32, "test".to_string());
+    assert_eq!(float.width, 1);
   }
   #[test]
-  fn buffer_declared() {
-    if let Some((file_contents, _)) = return_file_in_src("main.rs").split_once("#[cfg(test)]") {
-      assert!(reg_with_con(
-        r"let\s+buffer",
-        file_contents
-      ));
-    }
+  fn floating_image_struct_height() {
+    let float = FloatingImage::new(0u32, 10u32, "test".to_string());
+    assert_eq!(float.height, 10);
   }
   #[test]
-  fn buffer_assigned() {
-    if let Some((file_contents, _)) = return_file_in_src("main.rs").split_once("#[cfg(test)]") {
-      assert!(reg_with_con(
-        r"=\s*Vec::with_capacity\(\s*buffer_capacity\s*\)",
-        file_contents
-      ));
-    }
+  fn floating_image_struct_name() {
+    let float = FloatingImage::new(0u32, 0u32, "output".to_string());
+    assert_eq!(float.name, String::from("output"));
   }
   #[test]
-  fn buffer_typed() {
+  fn floating_image_struct_data() {
+    let float = FloatingImage::new(0u32, 0u32, "test".to_string());
+    assert_eq!(float.data.capacity(), 3_655_744);
+  }
+  #[test]
+  fn output_var_declared() {
     if let Some((file_contents, _)) = return_file_in_src("main.rs").split_once("#[cfg(test)]") {
+      assert!(reg_with_con(r"let\s+output", file_contents));
       assert!(reg_with_con(
-        r"let\s+buffer\s*:\s*Vec<u8>",
+        r"FloatingImage::new\(\s*image_1\.width\(\)\s*,\s*image_1\.height\(\)\s*,\s*args\.output",
         file_contents
       ));
     }
