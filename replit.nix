@@ -5,6 +5,6 @@
 		pkgs.rustfmt
 		pkgs.cargo
 		pkgs.cargo-edit
-        pkgs.rust-analyzer
+    pkgs.rust-analyzer
 	];
 }
