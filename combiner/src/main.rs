@@ -1,4 +1,4 @@
-// Lesson #61
+// Lesson #65
 #![allow(unused_variables, dead_code)]
 mod args;
 
@@ -76,8 +76,10 @@ fn combine_images(image_1: DynamicImage, image_2: DynamicImage) -> Vec<u8> {
 fn alternate_pixels(vec_1: Vec<u8>, vec_2: Vec<u8>) -> Vec<u8> {
   let combined_data = vec![0u8; vec_1.len()];
 
-  let i = 0;
-  while i < vec_1.len() {}
+  let mut i = 0;
+  while i < vec_1.len() {
+    i += 4;
+  }
 
   combined_data
 }
@@ -85,8 +87,11 @@ fn alternate_pixels(vec_1: Vec<u8>, vec_2: Vec<u8>) -> Vec<u8> {
 fn set_rgba(vec: Vec<u8>, start: usize, end: usize) -> Vec<u8> {
   let mut rgba = Vec::new();
   for i in start..=end {
-
-    rgba.push(i as u8);
+    let val = match vec.get(i) {
+      Some(d) => *d,
+      None => panic!("Index out of bounds"),
+    };
+    rgba.push(val);
   }
   rgba
 }
@@ -95,14 +100,8 @@ fn set_rgba(vec: Vec<u8>, start: usize, end: usize) -> Vec<u8> {
 mod tests {
   use super::*;
   #[test]
-  fn set_rgba_func_returns_start_to_end() {
-    let a = set_rgba(vec![0u8, 1u8, 2u8, 3u8, 4u8], 0usize, 3usize);
-    assert_eq!(a, vec![0, 1, 2, 3]);
-  }
-  #[test]
-  #[should_panic]
-  fn set_rgba_func_panics_on_invalid_index() {
-    let a = set_rgba(vec![10u8, 12u8, 32u8, 34u8, 54u8], 0usize, 5usize);
+  fn alternate_pixels_not_infinite() {
+    let _a = alternate_pixels(vec![1, 2, 3], vec![3, 2, 1]);
   }
 }
 
